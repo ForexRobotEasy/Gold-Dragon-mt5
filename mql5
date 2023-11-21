@@ -1,0 +1,103 @@
+
+//+------------------------------------------------------------------+
+//|                                            Gold Dragon MT5       |
+//|                                               forexroboteasy.com |
+//|                                                  Forex Robot Easy |
+//+------------------------------------------------------------------+
+
+// External parameters
+extern double StopLoss = 100; // Stop loss in pips
+extern double TakeProfit = 200; // Take profit in pips
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//| Expert initialization function                                     |
+//|                                                                  |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Set up trading account and symbol
+    if (!SetFifoRules())
+    {
+        Print('Failed to set FIFO rules');
+        return INIT_FAILED;
+    }
+    
+    Print('Gold Dragon MT5 initialized successfully');
+    
+    // Return initialization success
+    return INIT_SUCCEEDED;
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//| Expert deinitialization function                                   |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    Print('Gold Dragon MT5 deinitialized');
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//| Expert tick function                                              |
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Check if there is a new H1 candle
+    if (TimeHour(Time[0]) != TimeHour(Time[1]))
+    {
+        // Calculate the trend strength
+        double trendStrength = CalculateTrendStrength();
+        
+        // Check the direction of the trend
+        if (trendStrength > 0)
+        {
+            // Open a buy trade
+            if (OrderSend(Symbol(), OP_BUY, 0.01, Ask, 0, Bid - StopLoss * _Point, Bid + TakeProfit * _Point) > 0)
+            {
+                Print('Buy trade opened successfully');
+            }
+            else
+            {
+                Print('Failed to open buy trade');
+            }
+        }
+        else if (trendStrength < 0)
+        {
+            // Open a sell trade
+            if (OrderSend(Symbol(), OP_SELL, 0.01, Bid, 0, Ask + StopLoss * _Point, Ask - TakeProfit * _Point) > 0)
+            {
+                Print('Sell trade opened successfully');
+            }
+            else
+            {
+                Print('Failed to open sell trade');
+            }
+        }
+    }
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//| Function to calculate trend strength                              |
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CalculateTrendStrength()
+{
+    // TODO: Implement trend strength calculation logic
+    return 0; // Placeholder for trend strength value
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//| Function to set FIFO rules                                         |
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool SetFifoRules()
+{
+    // TODO: Implement FIFO rules logic
+    return true; // Placeholder for FIFO rules success
+}
